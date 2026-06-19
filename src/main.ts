@@ -12,17 +12,19 @@ class VigiIntercomMixin extends SettingsMixinDeviceBase<VideoCamera & Settings> 
     storageSettings = new StorageSettings(this, {
         host: {
             title: 'Host',
-            description: 'The VIGI camera host or IP. Leave empty to use the mixed camera IP setting when available.',
+            placeholder: 'Use camera IP',
+            description: 'Optional override. Leave empty to use the mixed camera IP, host, address, or RTSP URL host.',
         },
         username: {
             title: 'Username',
-            defaultValue: 'admin',
-            description: 'VIGI two-way audio currently requires the admin account.',
+            placeholder: 'Use camera username',
+            description: 'Optional override. VIGI two-way audio currently requires this to resolve to admin.',
         },
         password: {
             title: 'Admin Password',
             type: 'password',
-            description: 'The local VIGI admin password. This is typically the same credential used for RTSP.',
+            placeholder: 'Use camera password',
+            description: 'Optional override. Leave empty to use the mixed camera password.',
         },
         port: {
             title: 'Port',
@@ -87,8 +89,28 @@ class VigiIntercomMixin extends SettingsMixinDeviceBase<VideoCamera & Settings> 
         client?.close();
     }
 
-    getMixinSettings(): Promise<Setting[]> {
-        return this.storageSettings.getSettings();
+    async getMixinSettings(): Promise<Setting[]> {
+        const [settings, detected] = await Promise.all([
+            this.storageSettings.getSettings(),
+            this.getDetectedConnectionSettings().catch(() => undefined),
+        ]);
+
+        for (const setting of settings) {
+            if (setting.key === 'host' && detected?.host) {
+                setting.placeholder = detected.host;
+                setting.description = `Optional override. Currently detected from the mixed camera as ${detected.host}.`;
+            }
+            else if (setting.key === 'username' && detected?.username) {
+                setting.placeholder = detected.username;
+                setting.description = `Optional override. Currently detected from the mixed camera as ${detected.username}. VIGI talkback requires admin.`;
+            }
+            else if (setting.key === 'password' && detected?.password) {
+                setting.placeholder = 'Using mixed camera password';
+                setting.description = 'Optional override. A password was detected from the mixed camera settings.';
+            }
+        }
+
+        return settings;
     }
 
     putMixinSetting(key: string, value: SettingValue): Promise<boolean | void> {
@@ -96,21 +118,18 @@ class VigiIntercomMixin extends SettingsMixinDeviceBase<VideoCamera & Settings> 
     }
 
     private async getConnectionSettings() {
-        const mixinSettings = await this.mixinDevice.getSettings();
-        const detectedHost = mixinSettings.find(s => s.key === 'ip')?.value?.toString()
-            || mixinSettings.find(s => s.key === 'host')?.value?.toString()
-            || mixinSettings.find(s => s.key === 'address')?.value?.toString();
+        const detected = await this.getDetectedConnectionSettings();
 
-        const host = this.storageSettings.values.host?.toString() || detectedHost;
-        const username = this.storageSettings.values.username?.toString() || 'admin';
-        const password = this.storageSettings.values.password?.toString();
+        const host = this.storageSettings.values.host?.toString() || detected.host;
+        const username = this.storageSettings.values.username?.toString() || detected.username || 'admin';
+        const password = this.storageSettings.values.password?.toString() || detected.password;
         const portValue = this.storageSettings.values.port;
         const port = typeof portValue === 'number' ? portValue : parseInt(portValue?.toString() || '8800', 10);
 
         if (!host)
             throw new Error('VIGI host is not configured and could not be detected from the camera settings.');
         if (!password)
-            throw new Error('VIGI admin password is not configured.');
+            throw new Error('VIGI admin password is not configured and could not be detected from the camera settings.');
 
         return {
             host,
@@ -118,6 +137,38 @@ class VigiIntercomMixin extends SettingsMixinDeviceBase<VideoCamera & Settings> 
             password,
             port: Number.isFinite(port) ? port : 8800,
         };
+    }
+
+    private async getDetectedConnectionSettings() {
+        const cameraSettings = await this.mixinDevice.getSettings();
+        const getValue = (...keys: string[]) => {
+            for (const key of keys) {
+                const value = cameraSettings.find(s => s.key === key)?.value?.toString();
+                if (value)
+                    return value;
+            }
+        };
+
+        const rtspUrl = getValue('url', 'rtspUrl', 'rtspUrlOverride')
+            || (cameraSettings.find(s => s.key === 'urls')?.value as string[] | undefined)?.find(url => !!url);
+
+        return {
+            host: getValue('ip', 'host', 'address') || getHostFromUrl(rtspUrl),
+            username: getValue('username'),
+            password: getValue('password'),
+        };
+    }
+}
+
+function getHostFromUrl(value?: string): string | undefined {
+    if (!value)
+        return;
+
+    try {
+        return new URL(value).hostname;
+    }
+    catch {
+        return;
     }
 }
 
