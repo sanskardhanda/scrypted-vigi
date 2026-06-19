@@ -87,15 +87,3 @@ Video and talkback use different camera endpoints. Confirm that Scrypted can rea
 ### HomeKit pairing fails
 
 HomeKit pairing, mDNS, and bridge issues are handled by Scrypted's HomeKit plugin. First confirm the VIGI mixin is enabled on the camera and its settings are correct, then troubleshoot HomeKit separately.
-
-## Notes
-
-This implementation follows the behavior proven in go2rtc's `vigi://admin:password@host` support. The older VIGI API document appears to be stale for some current camera firmware, so the plugin targets the working local `/stream` protocol instead of the HTTPS `/ds` management API.
-
-Initial validation is unit and mock-protocol based. A real camera should be used for final hardware validation.
-
-## Publishing
-
-This repository includes a GitHub Actions workflow that publishes `@sanskardhanda/scrypted-vigi` to npm when a GitHub release is published, a `v*.*.*` tag is pushed, or the workflow is run manually.
-
-Add an npm automation token as a repository secret named `NPM_TOKEN`.
