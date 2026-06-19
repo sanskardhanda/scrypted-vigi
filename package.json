@@ -1,5 +1,5 @@
 {
-  "name": "scrypted-vigi",
+  "name": "@sanskardhanda/scrypted-vigi",
   "version": "0.1.0",
   "description": "TP-Link VIGI two-way audio mixin plugin for Scrypted",
   "main": "src/main.ts",
