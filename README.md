@@ -21,7 +21,7 @@ In Scrypted:
 
 1. Open `Plugins`.
 2. Click `Install Plugin`.
-3. Search for or paste `@sanskardhanda/scrypted-vigi`.
+3. Search for or paste `@metalbiker/scrypted-vigi`.
 4. Install `VIGI Two Way Audio`.
 
 ## Recommended Setup
