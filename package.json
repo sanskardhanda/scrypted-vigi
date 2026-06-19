@@ -1,0 +1,48 @@
+{
+  "name": "@scrypted/vigi",
+  "version": "0.0.1",
+  "description": "VIGI Camera Two Way Audio Plugin for Scrypted",
+  "main": "src/main.ts",
+  "scripts": {
+    "build": "scrypted-webpack",
+    "prepublishOnly": "NODE_ENV=production scrypted-webpack",
+    "scrypted-setup-project": "scrypted-setup-project",
+    "prescrypted-setup-project": "scrypted-package-json",
+    "scrypted-vscode-launch": "scrypted-deploy-debug",
+    "prescrypted-vscode-launch": "scrypted-webpack",
+    "scrypted-deploy-debug": "scrypted-deploy-debug",
+    "scrypted-deploy": "scrypted-deploy",
+    "scrypted-debug": "scrypted-debug",
+    "scrypted-readme": "scrypted-readme",
+    "scrypted-package-json": "scrypted-package-json",
+    "test": "node --test -r ts-node/register test/*.test.ts",
+    "tsc": "tsc --noEmit"
+  },
+  "keywords": [
+    "scrypted",
+    "plugin",
+    "vigi",
+    "tp-link",
+    "camera",
+    "intercom"
+  ],
+  "scrypted": {
+    "name": "VIGI Two Way Audio",
+    "type": "DeviceProvider",
+    "interfaces": [
+      "DeviceProvider"
+    ]
+  },
+  "dependencies": {
+    "@scrypted/sdk": "latest",
+    "crc-32": "^1.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "overrides": {
+    "serialize-javascript": "^7.0.6"
+  }
+}
