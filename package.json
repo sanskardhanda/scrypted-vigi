@@ -1,11 +1,11 @@
 {
-  "name": "@scrypted/vigi",
-  "version": "0.0.1",
-  "description": "VIGI Camera Two Way Audio Plugin for Scrypted",
+  "name": "scrypted-vigi",
+  "version": "0.1.0",
+  "description": "TP-Link VIGI two-way audio mixin plugin for Scrypted",
   "main": "src/main.ts",
   "scripts": {
     "build": "scrypted-webpack",
-    "prepublishOnly": "NODE_ENV=production scrypted-webpack",
+    "prepublishOnly": "npm run tsc && npm test",
     "scrypted-setup-project": "scrypted-setup-project",
     "prescrypted-setup-project": "scrypted-package-json",
     "scrypted-vscode-launch": "scrypted-deploy-debug",
@@ -16,7 +16,8 @@
     "scrypted-readme": "scrypted-readme",
     "scrypted-package-json": "scrypted-package-json",
     "test": "node --test -r ts-node/register test/*.test.ts",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "prepack": "NODE_ENV=production scrypted-webpack"
   },
   "keywords": [
     "scrypted",
@@ -24,7 +25,9 @@
     "vigi",
     "tp-link",
     "camera",
-    "intercom"
+    "intercom",
+    "two-way-audio",
+    "homekit"
   ],
   "scrypted": {
     "name": "VIGI Two Way Audio",
@@ -44,5 +47,18 @@
   },
   "overrides": {
     "serialize-javascript": "^7.0.6"
-  }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanskardhanda/scrypted-vigi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sanskardhanda/scrypted-vigi/issues"
+  },
+  "homepage": "https://github.com/sanskardhanda/scrypted-vigi#readme",
+  "files": [
+    "dist",
+    "README.md"
+  ]
 }

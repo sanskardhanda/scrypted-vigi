@@ -12,11 +12,22 @@ It does not import cameras or replace video streaming. Add the VIGI camera with 
 
 ## Setup
 
+### Install
+
+In Scrypted:
+
+1. Open `Plugins`.
+2. Click `Install Plugin`.
+3. Search for or paste `scrypted-vigi`.
+4. Install `VIGI Two Way Audio`.
+
+### Configure
+
 1. Add the camera to Scrypted using ONVIF or RTSP.
 2. Enable the `VIGI Two Way Audio` mixin on the camera.
 3. Open the mixin settings.
-4. Set the camera host or IP if it was not detected from the camera settings.
-5. Enter the local `admin` password.
+4. Leave Host, Username, and Admin Password blank to inherit them from the ONVIF/RTSP camera settings.
+5. If the inherited camera account is not `admin`, enter the VIGI `admin` username and password as overrides.
 6. Leave the port as `8800` unless your camera uses a custom mapping.
 
 ## Notes
