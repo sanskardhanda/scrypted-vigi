@@ -1,7 +1,7 @@
 {
   "name": "@metalbiker/scrypted-vigi",
-  "version": "0.2.0",
-  "description": "TP-Link VIGI camera controls for Scrypted",
+  "version": "0.1.0",
+  "description": "TP-Link VIGI two-way audio mixin plugin for Scrypted",
   "main": "src/main.ts",
   "scripts": {
     "build": "scrypted-webpack",
@@ -27,11 +27,10 @@
     "camera",
     "intercom",
     "two-way-audio",
-    "white-light",
     "homekit"
   ],
   "scrypted": {
-    "name": "VIGI Camera Controls",
+    "name": "VIGI Two Way Audio",
     "type": "DeviceProvider",
     "interfaces": [
       "DeviceProvider"
@@ -60,7 +59,6 @@
   "homepage": "https://github.com/sanskardhanda/scrypted-vigi#readme",
   "files": [
     "dist",
-    "src",
     "README.md"
   ]
 }

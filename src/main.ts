@@ -4,7 +4,6 @@ import { StorageSettings } from '@scrypted/sdk/storage-settings';
 import { startPcmaRtpForwarder, AudioForwarder } from './audio-forwarder';
 import { MpegTSWriter, StreamTypePCMATapo } from './mpegts-writer';
 import { VigiApi } from './vigi-api';
-import { VigiWhiteLightProvider } from './white-light';
 
 class VigiIntercomMixin extends SettingsMixinDeviceBase<VideoCamera & Settings> implements Intercom {
     private client?: Promise<VigiApi>;
@@ -206,32 +205,20 @@ class VigiPlugin extends ScryptedDeviceBase implements DeviceProvider {
         super(nativeId);
 
         process.nextTick(() => {
-            for (const device of [
-                {
-                    nativeId: 'intercom',
-                    name: 'VIGI Two Way Audio',
-                },
-                {
-                    nativeId: 'white-light',
-                    name: 'VIGI White Light',
-                },
-            ]) {
-                sdk.deviceManager.onDeviceDiscovered({
-                    ...device,
-                    type: ScryptedDeviceType.Builtin,
-                    interfaces: [
-                        ScryptedInterface.MixinProvider,
-                    ],
-                });
-            }
+            sdk.deviceManager.onDeviceDiscovered({
+                nativeId: 'intercom',
+                type: ScryptedDeviceType.Builtin,
+                interfaces: [
+                    ScryptedInterface.MixinProvider,
+                ],
+                name: 'VIGI Two Way Audio',
+            });
         });
     }
 
     async getDevice(nativeId: string): Promise<any> {
         if (nativeId === 'intercom')
             return new VigiIntercomProvider('intercom');
-        if (nativeId === 'white-light')
-            return new VigiWhiteLightProvider('white-light');
     }
 
     async releaseDevice(id: string, nativeId: string): Promise<void> {
