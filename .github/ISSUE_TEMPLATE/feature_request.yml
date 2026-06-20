@@ -1,0 +1,43 @@
+name: Feature request
+description: Suggest an improvement for the VIGI Scrypted plugin.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Use case
+      description: What are you trying to do in Scrypted?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the smallest useful behavior change.
+    validations:
+      required: true
+  - type: input
+    id: camera
+    attributes:
+      label: Camera model and firmware
+      placeholder: VIGI C540, firmware version
+    validations:
+      required: false
+  - type: textarea
+    id: evidence
+    attributes:
+      label: API or compatibility notes
+      description: Link to documentation, packet captures, or prior implementation notes if available. Remove secrets.
+    validations:
+      required: false
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This request is related to this Scrypted VIGI plugin.
+          required: true
+        - label: I understand this plugin currently provides VIGI two-way audio for cameras already added through ONVIF or RTSP.
+          required: true

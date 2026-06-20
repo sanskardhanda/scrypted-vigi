@@ -1,0 +1,98 @@
+name: Bug report
+description: Report a problem with VIGI two-way audio in Scrypted.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Remove passwords, tokens, and private network details from logs before submitting.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Talkback or intercom
+        - Mixin setup
+        - HomeKit exposure
+        - Install or build
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: camera
+    attributes:
+      label: Camera model
+      placeholder: VIGI C540, VIGI C340, etc.
+    validations:
+      required: true
+  - type: input
+    id: firmware
+    attributes:
+      label: Camera firmware
+    validations:
+      required: false
+  - type: input
+    id: scrypted
+    attributes:
+      label: Scrypted version
+    validations:
+      required: true
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: camera_source
+    attributes:
+      label: Camera source in Scrypted
+      options:
+        - ONVIF
+        - RTSP
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: admin
+    attributes:
+      label: Camera account
+      options:
+        - Local admin account
+        - Non-admin account
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Add camera through ONVIF or RTSP.
+        2. Enable VIGI Two Way Audio mixin.
+        3. Press talk in Scrypted or HomeKit.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Paste relevant Scrypted logs with secrets removed.
+      render: text
+    validations:
+      required: false
