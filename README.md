@@ -1,17 +1,21 @@
-# VIGI Two Way Audio for Scrypted
+# VIGI Camera Controls for Scrypted
 
-Adds TP-Link VIGI two-way audio, also called talkback or intercom, to VIGI cameras that are already in Scrypted.
+Adds TP-Link VIGI controls to cameras that are already in Scrypted:
 
-This plugin does not discover cameras, import cameras, or provide video streaming. Use Scrypted's ONVIF or RTSP plugin for video first. After the camera is working in Scrypted, enable this plugin as a mixin on that camera to add the `Intercom` interface.
+- Two-way audio, also called talkback or intercom.
+- White light control for supported VIGI cameras with white LEDs.
 
-There is no `Add Camera` button in this plugin. That is expected. The camera comes from ONVIF or RTSP; this plugin only adds the talk button.
+This plugin does not discover cameras, import cameras, or provide video streaming. Use Scrypted's ONVIF or RTSP plugin for video first. After the camera is working in Scrypted, enable the VIGI mixins you want on that camera.
+
+There is no `Add Camera` button in this plugin. That is expected. The camera comes from ONVIF or RTSP; this plugin adds optional controls to that camera.
 
 ## Requirements
 
 - A TP-Link VIGI camera already added to Scrypted through ONVIF or RTSP.
 - Working local video in Scrypted before this plugin is enabled.
 - The camera's local `admin` account credentials.
-- Local network access from Scrypted to the camera's VIGI stream service, normally port `8800`.
+- Local network access from Scrypted to the camera's VIGI stream service, normally port `8800`, for two-way audio.
+- Local HTTPS access from Scrypted to the camera, normally port `443`, for white light control.
 
 VIGI talkback is currently known to require the camera's `admin` account. A non-admin ONVIF or RTSP account may work for video, but it will usually not work for two-way audio.
 
@@ -22,9 +26,9 @@ In Scrypted:
 1. Open `Plugins`.
 2. Click `Install Plugin`.
 3. Search for or paste `@metalbiker/scrypted-vigi`.
-4. Install `VIGI Two Way Audio`.
+4. Install `VIGI Camera Controls`.
 
-## Recommended Setup
+## Two Way Audio Setup
 
 1. Add the VIGI camera to Scrypted using the ONVIF plugin or RTSP plugin.
 2. Use the camera's `admin` username and password when adding it, if possible.
@@ -41,6 +45,17 @@ Blank settings are intentional. The mixin tries to read the IP address, username
 
 Auto-detection looks for common camera settings such as `ip`, `host`, `address`, `url`, `rtspUrl`, `username`, and `password`. Different Scrypted camera plugins expose different setting names, so manual overrides are available when detection cannot find everything.
 
+## White Light Setup
+
+1. Open the camera in Scrypted.
+2. Open `Extensions` or `Mixins`.
+3. Enable `VIGI White Light`.
+4. Open the `VIGI White Light` settings on that camera.
+5. Leave `Host`, `Username`, and `Password` blank if the detected values look correct.
+6. Leave `HTTPS Port` as `443` unless your camera uses a custom HTTPS port.
+
+The white light switch changes the camera between white-light night vision and infrared night vision. Cameras without white LEDs may reject the command.
+
 ## Manual Settings
 
 Fill in the mixin settings only when auto-detection is missing something or the existing camera uses a different account.
@@ -49,13 +64,15 @@ Fill in the mixin settings only when auto-detection is missing something or the 
 | --- | --- |
 | `Host` | The camera IP was not detected, or the detected host is wrong. |
 | `Username` | The existing ONVIF/RTSP camera was added with a non-admin user. Set this to `admin`. |
-| `Admin Password` | The existing ONVIF/RTSP camera password is missing, wrong, or belongs to a non-admin user. |
+| `Admin Password` | The two-way audio password override is missing, wrong, or belongs to a non-admin user. |
+| `Password` | The white light password override is missing, wrong, or belongs to an account that cannot change image settings. |
 | `Port` | The VIGI stream service is not reachable on `8800`. |
 | `Channel` | Multi-channel devices only. Most standalone cameras should stay on `0`. |
+| `HTTPS Port` | The camera web API is not reachable on `443`. |
 
 ## HomeKit
 
-This plugin adds talkback to the Scrypted camera. HomeKit still needs to expose that camera through the Scrypted HomeKit plugin.
+This plugin adds controls to the Scrypted camera. HomeKit still needs to expose that camera through the Scrypted HomeKit plugin.
 
 If the camera is already in Apple Home before you enable this mixin:
 
@@ -72,6 +89,10 @@ If the Home app still does not show talkback, remove and re-add the HomeKit acce
 
 The target device must be a Scrypted `Camera` or `Doorbell` and must provide both `VideoCamera` and `Settings`. Add the camera through ONVIF or RTSP first, then reload the VIGI plugin.
 
+### `VIGI White Light` is not listed under Extensions
+
+The target device must be a Scrypted `Camera` or `Doorbell` and must provide both `VideoCamera` and `Settings`. Add the camera through ONVIF or RTSP first, then reload the VIGI plugin.
+
 ### Talkback fails with an admin error
 
 Use the camera's local `admin` account. VIGI talkback is currently expected to fail with non-admin users.
@@ -83,6 +104,10 @@ Open the mixin settings and manually set `Host`, `Username`, and `Admin Password
 ### Video works but talkback does not
 
 Video and talkback use different camera endpoints. Confirm that Scrypted can reach the camera on port `8800` and check the Scrypted plugin logs for the exact VIGI error.
+
+### White light control fails
+
+White light control uses the camera HTTPS API, not RTSP, ONVIF, or port `8800`. Confirm Scrypted can reach the camera on port `443`, and use a VIGI account that can change image settings.
 
 ### HomeKit pairing fails
 
